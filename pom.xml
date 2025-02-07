@@ -47,6 +47,7 @@
 
     <build>
         <plugins>
+            <!-- Compiler plugin for Java compilation -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -56,6 +57,8 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
+
+            <!-- Surefire plugin for running tests -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -66,6 +69,8 @@
                     </includes>
                 </configuration>
             </plugin>
+
+            <!-- Cucumber reporting plugin for HTML and JSON reports -->
             <plugin>
                 <groupId>net.masterthought</groupId>
                 <artifactId>maven-cucumber-reporting</artifactId>
@@ -81,7 +86,7 @@
                             <projectName>ui-test-cucumber-appium</projectName>
                             <outputDirectory>${project.build.directory}/cucumber-reports</outputDirectory>
                             <jsonFiles>
-                                <param>${project.build.directory}/cucumber.json</param>
+                                <param>${project.build.directory}/cucumber-reports/cucumber.json</param>
                             </jsonFiles>
                         </configuration>
                     </execution>
