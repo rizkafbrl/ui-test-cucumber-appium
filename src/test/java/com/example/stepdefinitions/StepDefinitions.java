@@ -4,11 +4,11 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
-import org.openqa.selenium.remote.DesiredCapabilities;
-
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
+import com.example.support.DriverManager;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import static org.junit.Assert.assertEquals;
 
@@ -17,23 +17,17 @@ public class StepDefinitions {
     private AndroidDriver<MobileElement> driver;
 
     @Given("I launch the app")
-    public void iLaunchTheApp() throws MalformedURLException, URISyntaxException {
-        DesiredCapabilities capabilities = new DesiredCapabilities();
-        capabilities.setCapability("platformName", "Android");
-        capabilities.setCapability("deviceName", "emulator-5554");
-        capabilities.setCapability("app", System.getProperty("user.dir") + "/apps/mda-2.2.0-25.apk");
-        capabilities.setCapability("automationName", "UiAutomator2");
-        capabilities.setCapability("appPackage", "com.saucelabs.mydemoapp.android");
-        capabilities.setCapability("appActivity", "com.saucelabs.mydemoapp.android.view.activities.SplashActivity");
-
-        driver = new AndroidDriver<>(new URI("http://localhost:4723/").toURL(), capabilities);
+    public void iLaunchTheApp() {
+        DriverManager.initializeDriver();
+        driver = DriverManager.getDriver();
     }
 
     @Then("I should see the title {string}")
     public void iShouldSeeTheTitle(String expectedTitle) {
-        MobileElement element = driver.findElementByAccessibilityId("title");
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+        WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("com.saucelabs.mydemoapp.android:id/title")));
         String actualTitle = element.getText();
         assertEquals(expectedTitle, actualTitle);
-        driver.quit();
+        DriverManager.quitDriver();
     }
 }
