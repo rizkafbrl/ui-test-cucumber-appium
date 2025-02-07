@@ -26,7 +26,7 @@ public class StepDefinitions {
     @Then("I should see the title {string}")
     public void iShouldSeeTheTitle(String expectedTitle) {
         WebDriverWait wait = new WebDriverWait(driver, 10);
-        WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("com.saucelabs.mydemoapp.android:id/title")));
+        WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("com.saucelabs.mydemoapp.android:id/productTV")));
         String actualTitle = element.getText();
         assertEquals(expectedTitle, actualTitle);
     }
