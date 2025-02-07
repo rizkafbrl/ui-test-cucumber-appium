@@ -23,13 +23,15 @@ public class StepDefinitions {
         capabilities.setCapability("deviceName", "emulator-5554");
         capabilities.setCapability("app", System.getProperty("user.dir") + "/apps/mda-2.2.0-25.apk");
         capabilities.setCapability("automationName", "UiAutomator2");
+        capabilities.setCapability("appPackage", "com.saucelabs.mydemoapp.android");
+        capabilities.setCapability("appActivity", "com.saucelabs.mydemoapp.android.view.activities.SplashActivity");
 
         driver = new AndroidDriver<>(new URI("http://localhost:4723/").toURL(), capabilities);
     }
 
     @Then("I should see the title {string}")
     public void iShouldSeeTheTitle(String expectedTitle) {
-        MobileElement element = driver.findElementByAccessibilityId("title"); // Update this ID if necessary
+        MobileElement element = driver.findElementByAccessibilityId("title");
         String actualTitle = element.getText();
         assertEquals(expectedTitle, actualTitle);
         driver.quit();

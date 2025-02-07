@@ -80,7 +80,9 @@
                         <configuration>
                             <projectName>ui-test-cucumber-appium</projectName>
                             <outputDirectory>${project.build.directory}/cucumber-reports</outputDirectory>
-                            <cucumberOutput>${project.build.directory}/cucumber.json</cucumberOutput>
+                            <jsonFiles>
+                                <param>${project.build.directory}/cucumber.json</param>
+                            </jsonFiles>
                         </configuration>
                     </execution>
                 </executions>
