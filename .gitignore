@@ -1,0 +1,29 @@
+# IntelliJ IDEA
+.idea/
+*.iml
+
+# VS Code
+.vscode/
+
+# MacOS
+.DS_Store
+
+# Maven
+target/
+*.log
+
+# Appium
+apps/
+
+# Java
+*.class
+*.jar
+*.war
+*.ear
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
