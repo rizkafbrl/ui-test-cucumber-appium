@@ -1,5 +1,6 @@
 package com.example.stepdefinitions;
 
+import io.cucumber.java.After;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 import io.cucumber.java.en.Then;
@@ -101,5 +102,10 @@ public class HomepageStepDefinitions {
                 System.out.println("Unknown option: " + option);
                 break;
         }
+    }
+
+    @After
+    public void tearDown() {
+        DriverManager.quitDriver();
     }
 }

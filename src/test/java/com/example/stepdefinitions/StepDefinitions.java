@@ -1,5 +1,6 @@
 package com.example.stepdefinitions;
 
+import io.cucumber.java.After;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.appium.java_client.MobileElement;
@@ -28,6 +29,10 @@ public class StepDefinitions {
         WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("com.saucelabs.mydemoapp.android:id/title")));
         String actualTitle = element.getText();
         assertEquals(expectedTitle, actualTitle);
+    }
+
+    @After
+    public void tearDown() {
         DriverManager.quitDriver();
     }
 }
