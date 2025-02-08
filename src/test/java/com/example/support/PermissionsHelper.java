@@ -34,7 +34,7 @@ public class PermissionsHelper {
     }
 
     public void bypassBiometricPopup() {
-        WebDriverWait wait = new WebDriverWait(driver, WaitTimes.QUICK_WAIT);
+        WebDriverWait wait = new WebDriverWait(driver, WaitTimes.LOW_WAIT);
         try {
             MobileElement okButton = (MobileElement) wait.until(
                 ExpectedConditions.elementToBeClickable(

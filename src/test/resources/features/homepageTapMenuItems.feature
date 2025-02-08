@@ -6,8 +6,8 @@ Feature: Navigating through the homepage menu items
     Given User on homepage
     When User tap on menu button
     Then User able to see menu items
-    When User tap on "Product" Catalog menu item
-    Then User should be redirected to "Catalog" page
+    When User tap on "Catalog" menu item
+    Then User should be redirected to "Products" page
 
   @regression @positive @TC_HG_TAP_02
   Scenario: Open WebView from homepage menu

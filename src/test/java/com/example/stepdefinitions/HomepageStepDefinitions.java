@@ -5,7 +5,6 @@ import com.example.support.HelperCommons;
 import com.example.support.WaitTimes;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
-import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 import io.cucumber.java.en.Then;
 import io.appium.java_client.MobileElement;

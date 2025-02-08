@@ -10,6 +10,7 @@ import io.cucumber.java.en.When;
 import io.cucumber.java.en.Then;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.MobileBy;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -51,8 +52,23 @@ public class HomepageMenuStepDefinitions {
     @Then("User should be redirected to {string} page")
     public void userShouldBeRedirectedToPage(String pageTitle) {
         WebDriverWait wait = new WebDriverWait(driver, WaitTimes.MEDIUM_WAIT);
-        WebElement pageTitleElement = wait.until(ExpectedConditions.visibilityOfElementLocated(
-                By.xpath("//android.widget.TextView[@text='" + pageTitle + "']")));
+        MobileElement pageTitleElement = null;
+
+        try {
+            pageTitleElement = (MobileElement) wait.until(ExpectedConditions.visibilityOfElementLocated(
+                    By.xpath("//android.widget.TextView[@text='" + pageTitle + "']")));
+        } catch (Exception e1) {
+            try {
+                // If element not found by XPath, try to find by resource-id and text
+                pageTitleElement = (MobileElement) wait.until(ExpectedConditions.visibilityOfElementLocated(
+                        MobileBy.AndroidUIAutomator("new UiSelector().resourceId(\"com.saucelabs.mydemoapp.android:id/productTV\").text(\"" + pageTitle + "\")")));
+            } catch (Exception e2) {
+                // If element not found by resource-id and text, try to find by resource-id and content-desc
+                pageTitleElement = (MobileElement) wait.until(ExpectedConditions.visibilityOfElementLocated(
+                        MobileBy.AndroidUIAutomator("new UiSelector().resourceId(\"com.saucelabs.mydemoapp.android:id/productTV\").description(\"" + pageTitle + "\")")));
+            }
+        }
+
         assertThat(pageTitleElement.isDisplayed()).isTrue();
 
         // Grant all permissions
