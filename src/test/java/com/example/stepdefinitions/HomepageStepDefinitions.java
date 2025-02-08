@@ -2,6 +2,7 @@ package com.example.stepdefinitions;
 
 import com.example.stepdefinitions.commons.HomepageCommon;
 import io.cucumber.java.After;
+import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 import io.cucumber.java.en.Then;
@@ -25,6 +26,14 @@ public class HomepageStepDefinitions {
     public HomepageStepDefinitions() {
         this.driver = DriverManager.getDriver();
         this.homepageCommon = new HomepageCommon();
+    }
+
+    @Before
+    public void setUp() {
+        // Terminate and activate the app to navigate to the homepage
+        driver.terminateApp("com.saucelabs.mydemoapp.android");
+        driver.activateApp("com.saucelabs.mydemoapp.android");
+        homepageCommon.userOnHomepage();
     }
 
     @When("User tap on sorting button")

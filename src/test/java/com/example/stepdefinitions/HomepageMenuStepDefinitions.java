@@ -2,6 +2,7 @@ package com.example.stepdefinitions;
 
 import com.example.stepdefinitions.commons.HomepageCommon;
 import io.cucumber.java.After;
+import io.cucumber.java.Before;
 import io.cucumber.java.en.When;
 import io.cucumber.java.en.Then;
 import io.appium.java_client.MobileElement;
@@ -21,6 +22,14 @@ public class HomepageMenuStepDefinitions {
     public HomepageMenuStepDefinitions() {
         this.driver = DriverManager.getDriver();
         this.homepageCommon = new HomepageCommon();
+    }
+
+    @Before
+    public void setUp() {
+        // Terminate and activate the app to navigate to the homepage
+        driver.terminateApp("com.saucelabs.mydemoapp.android");
+        driver.activateApp("com.saucelabs.mydemoapp.android");
+        homepageCommon.userOnHomepage();
     }
 
     @Then("User able to see menu items")
