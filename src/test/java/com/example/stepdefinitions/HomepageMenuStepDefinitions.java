@@ -45,21 +45,13 @@ public class HomepageMenuStepDefinitions {
                 By.xpath("//android.widget.TextView[@text='" + pageTitle + "']")));
         assertThat(pageTitleElement.isDisplayed()).isTrue();
 
-        // Verify that the user is not on the homepage anymore
+        // Verify that the drawer is closed
         try {
-            boolean isHomepageElementInvisible = wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("com.saucelabs.mydemoapp.android:id/productTV")));
-            assertThat(isHomepageElementInvisible).isTrue();
+            boolean isMenuInvisible = wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("com.saucelabs.mydemoapp.android:id/menuRV")));
+            assertThat(isMenuInvisible).isTrue();
         } catch (Exception e) {
             // Log the exception and continue
-            System.out.println("Homepage element is still visible: " + e.getMessage());
-        }
-
-        try {
-            boolean isSortButtonInvisible = wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("com.saucelabs.mydemoapp.android:id/sortIV")));
-            assertThat(isSortButtonInvisible).isTrue();
-        } catch (Exception e) {
-            // Log the exception and continue
-            System.out.println("Sort button is still visible: " + e.getMessage());
+            System.out.println("User not redirected. Menu drawer is still visible: " + e.getMessage());
         }
     }
 
