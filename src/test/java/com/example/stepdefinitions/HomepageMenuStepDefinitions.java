@@ -36,14 +36,14 @@ public class HomepageMenuStepDefinitions {
 
     @Then("User able to see menu items")
     public void userAbleToSeeMenuItems() {
-        WebDriverWait wait = new WebDriverWait(driver, WaitTimes.MEDIUM_WAIT);
+        WebDriverWait wait = new WebDriverWait(driver, WaitTimes.QUICK_WAIT);
         WebElement menuItems = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("com.saucelabs.mydemoapp.android:id/menuRV")));
         assertThat(menuItems.isDisplayed()).isTrue();
     }
 
     @When("User tap on {string} menu item")
     public void userTapOnMenuItem(String menuItem) {
-        WebDriverWait wait = new WebDriverWait(driver, WaitTimes.MEDIUM_WAIT);
+        WebDriverWait wait = new WebDriverWait(driver, WaitTimes.QUICK_WAIT);
         WebElement menuItemElement = wait.until(ExpectedConditions.elementToBeClickable(
                 By.xpath("//android.widget.TextView[@resource-id='com.saucelabs.mydemoapp.android:id/itemTV' and @text='" + menuItem + "']")));
         menuItemElement.click();

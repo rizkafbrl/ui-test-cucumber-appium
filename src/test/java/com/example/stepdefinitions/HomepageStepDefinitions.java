@@ -49,7 +49,7 @@ public class HomepageStepDefinitions {
 
     @When("User tap on {string} option")
     public void userTapOnSortOption(String option) {
-        WebDriverWait wait = new WebDriverWait(driver, WaitTimes.MEDIUM_WAIT);
+        WebDriverWait wait = new WebDriverWait(driver, WaitTimes.QUICK_WAIT);
         switch(option) {
             case "Name - Ascending":
                 WebElement nameAscElement = wait.until(ExpectedConditions.elementToBeClickable(By.id("com.saucelabs.mydemoapp.android:id/nameAscCL")));
@@ -92,14 +92,14 @@ public class HomepageStepDefinitions {
 
     @Then("the filter widget should be closed")
     public void verifyFilterWidgetClosed() {
-        WebDriverWait wait = new WebDriverWait(driver, WaitTimes.MEDIUM_WAIT);
+        WebDriverWait wait = new WebDriverWait(driver, WaitTimes.QUICK_WAIT);
         boolean isFilterWidgetClosed = wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("com.saucelabs.mydemoapp.android:id/sortTV")));
         assertThat(isFilterWidgetClosed).isTrue();
     }
 
     @When("User tap on menu button")
     public void userTapOnMenuButton() {
-        WebDriverWait wait = new WebDriverWait(driver, WaitTimes.MEDIUM_WAIT);
+        WebDriverWait wait = new WebDriverWait(driver, WaitTimes.QUICK_WAIT);
         WebElement menuButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("com.saucelabs.mydemoapp.android:id/menuIV")));
         menuButton.click();
     }
