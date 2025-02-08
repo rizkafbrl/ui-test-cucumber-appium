@@ -43,8 +43,19 @@ To run tests with a specific scenario or tag, use the following command:
 ```bash
 mvn test -Dcucumber.filter.tags="@yourScenarioTag"
 ```
-
 Replace @yourScenarioTag with the tag you want to target.
+
+# Clean the project
+mvn clean
+
+# Re-install all dependencies
+mvn install
+
+# Build the project
+mvn package
+
+# Run the tests and generate the report
+mvn verify -Dcucumber.filter.tags="@TC_HG_SRT_01"
 
 ## Cucumber Tags
 
