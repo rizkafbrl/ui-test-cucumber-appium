@@ -6,7 +6,8 @@ import io.appium.java_client.remote.MobileCapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 public class DriverManager {
     private static AndroidDriver<MobileElement> driver;
@@ -36,8 +37,8 @@ public class DriverManager {
         capabilities.setCapability(MobileCapabilityType.APP, System.getProperty("user.dir") + "/apps/mda-2.2.0-25.apk");
 
         try {
-            driver = new AndroidDriver<>(new URL("http://127.0.0.1:4723"), capabilities);
-        } catch (MalformedURLException e) {
+            driver = new AndroidDriver<>(new URI("http://127.0.0.1:4723").toURL(), capabilities);
+        } catch (MalformedURLException | URISyntaxException e) {
             throw new RuntimeException("Invalid Appium URL", e);
         }
     }
