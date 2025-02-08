@@ -14,7 +14,7 @@ public class PermissionsHelper {
     }
 
     public void grantPermission(String permission) {
-        WebDriverWait wait = new WebDriverWait(driver, 5);
+        WebDriverWait wait = new WebDriverWait(driver, WaitTimes.MEDIUM_WAIT);
         try {
             MobileElement allowButton = (MobileElement) wait.until(
                 ExpectedConditions.elementToBeClickable(
@@ -27,7 +27,7 @@ public class PermissionsHelper {
         }
     }
 
-    public void grantAllPermissions() {
+    public void grantAllPermissionsOnAndroid() {
         grantPermission("camera");
         grantPermission("location");
         grantPermission("storage");

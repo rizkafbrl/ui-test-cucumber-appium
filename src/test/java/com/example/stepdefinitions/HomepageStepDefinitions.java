@@ -2,6 +2,7 @@ package com.example.stepdefinitions;
 
 import com.example.support.DriverManager;
 import com.example.support.HelperCommons;
+import com.example.support.WaitTimes;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
@@ -35,21 +36,21 @@ public class HomepageStepDefinitions {
 
     @When("User tap on sorting button")
     public void userTapOnSortingButton() {
-        WebDriverWait wait = new WebDriverWait(driver, 10);
+        WebDriverWait wait = new WebDriverWait(driver, WaitTimes.MEDIUM_WAIT);
         WebElement sortButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("com.saucelabs.mydemoapp.android:id/sortIV")));
         sortButton.click();
     }
 
     @Then("User able to see filter widget on homepage")
     public void userAbleToSeeFilterWidgetOnHomepage() {
-        WebDriverWait wait = new WebDriverWait(driver, 10);
+        WebDriverWait wait = new WebDriverWait(driver, WaitTimes.MEDIUM_WAIT);
         WebElement sortByText = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("com.saucelabs.mydemoapp.android:id/sortTV")));
         assertThat(sortByText.isDisplayed()).isTrue();
     }
 
     @When("User tap on {string} option")
     public void userTapOnSortOption(String option) {
-        WebDriverWait wait = new WebDriverWait(driver, 10);
+        WebDriverWait wait = new WebDriverWait(driver, WaitTimes.MEDIUM_WAIT);
         switch(option) {
             case "Name - Ascending":
                 WebElement nameAscElement = wait.until(ExpectedConditions.elementToBeClickable(By.id("com.saucelabs.mydemoapp.android:id/nameAscCL")));
@@ -75,7 +76,7 @@ public class HomepageStepDefinitions {
 
     @Then("the products should be sorted with {string}")
     public void verifyProductsSorting(String sortOrder) {
-        WebDriverWait wait = new WebDriverWait(driver, 10);
+        WebDriverWait wait = new WebDriverWait(driver, WaitTimes.MEDIUM_WAIT);
         List<MobileElement> products = driver.findElements(By.xpath("//android.view.ViewGroup[contains(@resource-id, 'productItem')]"));
         List<String> productNames = products.stream()
                 .map(product -> product.findElement(By.xpath(".//android.widget.TextView")).getText())
@@ -92,14 +93,14 @@ public class HomepageStepDefinitions {
 
     @Then("the filter widget should be closed")
     public void verifyFilterWidgetClosed() {
-        WebDriverWait wait = new WebDriverWait(driver, 10);
+        WebDriverWait wait = new WebDriverWait(driver, WaitTimes.MEDIUM_WAIT);
         boolean isFilterWidgetClosed = wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("com.saucelabs.mydemoapp.android:id/sortTV")));
         assertThat(isFilterWidgetClosed).isTrue();
     }
 
     @When("User tap on menu button")
     public void userTapOnMenuButton() {
-        WebDriverWait wait = new WebDriverWait(driver, 10);
+        WebDriverWait wait = new WebDriverWait(driver, WaitTimes.MEDIUM_WAIT);
         WebElement menuButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("com.saucelabs.mydemoapp.android:id/menuIV")));
         menuButton.click();
     }
