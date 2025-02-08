@@ -1,17 +1,17 @@
 Feature: Navigating through the homepage menu items
 
-  Scenario: Open Catalog from homepage menu
+  Scenario: Open Product Catalog from homepage menu
     Given User on homepage
     When User tap on menu button
     Then User able to see menu items
-    When User tap on "Catalog" menu item
+    When User tap on "Product" Catalog menu item
     Then User should be redirected to "Catalog" page
 
   Scenario: Open WebView from homepage menu
     Given User on homepage
     When User tap on menu button
     Then User able to see menu items
-    When User tap on "WebView" menu item
+    When User tap on "Webview" menu item
     Then User should be redirected to "WebView" page
 
   Scenario: Open QR Code Scanner from homepage menu

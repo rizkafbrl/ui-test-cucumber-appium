@@ -1,6 +1,8 @@
 package com.example.stepdefinitions;
 
 import com.example.stepdefinitions.commons.HomepageCommon;
+import com.example.support.DriverManager;
+import com.example.support.PermissionsHelper;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.When;
@@ -11,17 +13,18 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import com.example.support.DriverManager;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class HomepageMenuStepDefinitions {
     private AndroidDriver<MobileElement> driver;
     private HomepageCommon homepageCommon;
+    private PermissionsHelper permissionsHelper;
 
     public HomepageMenuStepDefinitions() {
         this.driver = DriverManager.getDriver();
         this.homepageCommon = new HomepageCommon();
+        this.permissionsHelper = new PermissionsHelper(driver);
     }
 
     @Before
@@ -30,6 +33,7 @@ public class HomepageMenuStepDefinitions {
         driver.terminateApp("com.saucelabs.mydemoapp.android");
         driver.activateApp("com.saucelabs.mydemoapp.android");
         homepageCommon.userOnHomepage();
+        permissionsHelper.grantAllPermissions();
     }
 
     @Then("User able to see menu items")

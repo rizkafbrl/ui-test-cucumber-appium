@@ -20,7 +20,7 @@ public class HomepageCommon {
 
     @Given("User on homepage")
     public void userOnHomepage() {
-        WebDriverWait wait = new WebDriverWait(driver, 30);
+        WebDriverWait wait = new WebDriverWait(driver, 15);
         WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("com.saucelabs.mydemoapp.android:id/productTV")));
         String actualTitle = element.getText();
         assertEquals("Products", actualTitle);
