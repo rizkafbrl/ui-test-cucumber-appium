@@ -1,6 +1,7 @@
 package com.example.stepdefinitions;
 
-import com.example.stepdefinitions.commons.HomepageCommon;
+import com.example.support.DriverManager;
+import com.example.support.HelperCommons;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
@@ -12,7 +13,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import com.example.support.DriverManager;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -21,19 +21,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class HomepageStepDefinitions {
     private AndroidDriver<MobileElement> driver;
-    private HomepageCommon homepageCommon;
+    private HelperCommons helperCommons;
 
     public HomepageStepDefinitions() {
         this.driver = DriverManager.getDriver();
-        this.homepageCommon = new HomepageCommon();
+        this.helperCommons = new HelperCommons(driver);
     }
 
     @Before
     public void setUp() {
-        // Terminate and activate the app to navigate to the homepage
-        driver.terminateApp("com.saucelabs.mydemoapp.android");
-        driver.activateApp("com.saucelabs.mydemoapp.android");
-        homepageCommon.userOnHomepage();
+        helperCommons.setUp();
     }
 
     @When("User tap on sorting button")
@@ -109,6 +106,6 @@ public class HomepageStepDefinitions {
 
     @After
     public void tearDown() {
-        DriverManager.quitDriver();
+        helperCommons.tearDown();
     }
 }

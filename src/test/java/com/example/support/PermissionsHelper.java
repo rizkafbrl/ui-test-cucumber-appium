@@ -14,10 +14,13 @@ public class PermissionsHelper {
     }
 
     public void grantPermission(String permission) {
-        WebDriverWait wait = new WebDriverWait(driver, 10);
+        WebDriverWait wait = new WebDriverWait(driver, 5);
         try {
-            MobileElement allowButton = (MobileElement) wait.until(ExpectedConditions.elementToBeClickable(
-                    By.xpath("//android.widget.Button[@text='ALLOW' or @text='Allow']")));
+            MobileElement allowButton = (MobileElement) wait.until(
+                ExpectedConditions.elementToBeClickable(
+                    By.xpath("//android.widget.Button[@text='ALLOW' or @text='Allow']")
+                    )
+                );
             allowButton.click();
         } catch (Exception e) {
             System.out.println("Permission " + permission + " not granted or requested: " + e.getMessage());

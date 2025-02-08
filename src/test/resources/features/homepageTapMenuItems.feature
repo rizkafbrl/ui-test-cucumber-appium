@@ -75,4 +75,4 @@ Feature: Navigating through the homepage menu items
     When User tap on menu button
     Then User able to see menu items
     When User tap on "Log In" menu item
-    Then User should be redirected to "Log In" page
+    Then User should be redirected to "Login" page

@@ -1,7 +1,7 @@
 package com.example.stepdefinitions;
 
-import com.example.stepdefinitions.commons.HomepageCommon;
 import com.example.support.DriverManager;
+import com.example.support.HelperCommons;
 import com.example.support.PermissionsHelper;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
@@ -18,22 +18,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class HomepageMenuStepDefinitions {
     private AndroidDriver<MobileElement> driver;
-    private HomepageCommon homepageCommon;
+    private HelperCommons helperCommons;
     private PermissionsHelper permissionsHelper;
 
     public HomepageMenuStepDefinitions() {
         this.driver = DriverManager.getDriver();
-        this.homepageCommon = new HomepageCommon();
+        this.helperCommons = new HelperCommons(driver);
         this.permissionsHelper = new PermissionsHelper(driver);
     }
 
     @Before
     public void setUp() {
-        // Terminate and activate the app to navigate to the homepage
-        driver.terminateApp("com.saucelabs.mydemoapp.android");
-        driver.activateApp("com.saucelabs.mydemoapp.android");
-        homepageCommon.userOnHomepage();
-        permissionsHelper.grantAllPermissions();
+        helperCommons.setUp();
     }
 
     @Then("User able to see menu items")
@@ -58,6 +54,9 @@ public class HomepageMenuStepDefinitions {
                 By.xpath("//android.widget.TextView[@text='" + pageTitle + "']")));
         assertThat(pageTitleElement.isDisplayed()).isTrue();
 
+        // Grant all permissions
+        permissionsHelper.grantAllPermissions();
+
         // Verify that the drawer is closed
         try {
             boolean isMenuInvisible = wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("com.saucelabs.mydemoapp.android:id/menuRV")));
@@ -70,6 +69,6 @@ public class HomepageMenuStepDefinitions {
 
     @After
     public void tearDown() {
-        DriverManager.quitDriver();
+        helperCommons.tearDown();
     }
 }
