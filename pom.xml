@@ -1,8 +1,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    
     <modelVersion>4.0.0</modelVersion>
-
     <groupId>com.example</groupId>
     <artifactId>ui-test-cucumber-appium</artifactId>
     <version>1.0-SNAPSHOT</version>
@@ -16,10 +16,15 @@
         <appium.version>7.3.0</appium.version>
         <junit.version>4.13.1</junit.version>
         <assertj.version>3.24.2</assertj.version>
+        <selenium.version>3.141.59</selenium.version>
+        <extentreports.version>5.0.9</extentreports.version>
+        <surefire.version>2.22.2</surefire.version>
+        <cucumber.reporting.version>5.7.0</cucumber.reporting.version>
+        <maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
     </properties>
 
     <dependencies>
-        <!-- Cucumber dependencies -->
+        <!-- Cucumber -->
         <dependency>
             <groupId>io.cucumber</groupId>
             <artifactId>cucumber-java</artifactId>
@@ -31,63 +36,63 @@
             <version>${cucumber.version}</version>
             <scope>test</scope>
         </dependency>
-
-        <!-- Appium dependencies -->
+        
+        <!-- Appium -->
         <dependency>
             <groupId>io.appium</groupId>
             <artifactId>java-client</artifactId>
             <version>${appium.version}</version>
         </dependency>
-
-        <!-- Selenium dependencies -->
+        
+        <!-- Selenium -->
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
-            <version>3.141.59</version>
+            <version>${selenium.version}</version>
         </dependency>
-
-        <!-- AssertJ dependencies -->
+        
+        <!-- AssertJ -->
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
             <version>${assertj.version}</version>
             <scope>test</scope>
         </dependency>
-
-        <!-- JUnit dependencies -->
+        
+        <!-- JUnit -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
-
-        <!-- ExtentReports dependencies -->
+        
+        <!-- ExtentReports -->
         <dependency>
             <groupId>com.aventstack</groupId>
             <artifactId>extentreports</artifactId>
-            <version>5.0.9</version>
+            <version>${extentreports.version}</version>
         </dependency>
     </dependencies>
 
     <build>
         <plugins>
-            <!-- Compiler plugin for Java compilation -->
+            <!-- Compiler Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <version>${maven.compiler.plugin.version}</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
                 </configuration>
             </plugin>
 
-            <!-- Surefire plugin for running tests -->
+            <!-- Surefire Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.22.2</version>
+                <version>${surefire.version}</version>
                 <configuration>
                     <includes>
                         <include>**/RunCucumberTest.java</include>
@@ -98,21 +103,20 @@
                 </configuration>
             </plugin>
 
-            <!-- Cucumber reporting plugin for HTML and JSON reports -->
+            <!-- Cucumber Reporting Plugin -->
             <plugin>
                 <groupId>net.masterthought</groupId>
                 <artifactId>maven-cucumber-reporting</artifactId>
-                <version>5.7.0</version>
+                <version>${cucumber.reporting.version}</version>
                 <executions>
                     <execution>
                         <id>generate-cucumber-reports</id>
-                        <!-- <phase>verify</phase> -->
                         <phase>post-integration-test</phase>
                         <goals>
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <projectName>ui-test-cucumber-appium</projectName>
+                            <projectName>${artifactId}</projectName>
                             <outputDirectory>${project.build.directory}/cucumber-reports</outputDirectory>
                             <jsonFiles>
                                 <param>${project.build.directory}/cucumber-reports/cucumber.json</param>
