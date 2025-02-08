@@ -14,7 +14,7 @@ public class PermissionsHelper {
     }
 
     public void grantPermission(String permission) {
-        WebDriverWait wait = new WebDriverWait(driver, WaitTimes.MEDIUM_WAIT);
+        WebDriverWait wait = new WebDriverWait(driver, WaitTimes.QUICK_WAIT);
         try {
             MobileElement allowButton = (MobileElement) wait.until(
                 ExpectedConditions.elementToBeClickable(
@@ -31,5 +31,20 @@ public class PermissionsHelper {
         grantPermission("camera");
         grantPermission("location");
         grantPermission("storage");
+    }
+
+    public void bypassBiometricPopup() {
+        WebDriverWait wait = new WebDriverWait(driver, WaitTimes.QUICK_WAIT);
+        try {
+            MobileElement okButton = (MobileElement) wait.until(
+                ExpectedConditions.elementToBeClickable(
+                    By.xpath("//android.widget.Button[@text='OK']")
+                )
+            );
+            okButton.click();
+            System.out.println("Biometric popup dismissed.");
+        } catch (Exception e) {
+            System.out.println("No biometric popup detected: " + e.getMessage());
+        }
     }
 }
