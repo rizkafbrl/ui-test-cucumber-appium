@@ -106,7 +106,8 @@
                 <executions>
                     <execution>
                         <id>generate-cucumber-reports</id>
-                        <phase>verify</phase>
+                        <!-- <phase>verify</phase> -->
+                        <phase>post-integration-test</phase>
                         <goals>
                             <goal>generate</goal>
                         </goals>
