@@ -1,4 +1,4 @@
-Feature: Sorting Homepage Item
+Feature: Navigating Sorting Widget And Sorting Button Items
 
   Scenario: Sort products by name in ascending order on homepage
     Given User on homepage

@@ -1,5 +1,6 @@
 package com.example.stepdefinitions;
 
+import com.example.stepdefinitions.commons.HomepageCommon;
 import io.cucumber.java.After;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
@@ -16,21 +17,14 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
 
 public class HomepageStepDefinitions {
     private AndroidDriver<MobileElement> driver;
+    private HomepageCommon homepageCommon;
 
     public HomepageStepDefinitions() {
         this.driver = DriverManager.getDriver();
-    }
-
-    @Given("User on homepage")
-    public void userOnHomepage() {
-        WebDriverWait wait = new WebDriverWait(driver, 10);
-        WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("com.saucelabs.mydemoapp.android:id/productTV")));
-        String actualTitle = element.getText();
-        assertEquals("Products", actualTitle);
+        this.homepageCommon = new HomepageCommon();
     }
 
     @When("User tap on sorting button")
@@ -95,6 +89,13 @@ public class HomepageStepDefinitions {
         WebDriverWait wait = new WebDriverWait(driver, 10);
         boolean isFilterWidgetClosed = wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("com.saucelabs.mydemoapp.android:id/sortTV")));
         assertThat(isFilterWidgetClosed).isTrue();
+    }
+
+    @When("User tap on menu button")
+    public void userTapOnMenuButton() {
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+        WebElement menuButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("com.saucelabs.mydemoapp.android:id/menuIV")));
+        menuButton.click();
     }
 
     @After
