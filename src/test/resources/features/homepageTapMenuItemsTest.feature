@@ -1,4 +1,4 @@
-@homepageTapMenuItem
+@homepageNavigateViaMenuItem
 Feature: Navigating through the homepage menu items
 
   @regression @positive @TC_HG_TAP_01
