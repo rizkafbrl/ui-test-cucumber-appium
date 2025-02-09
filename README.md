@@ -153,6 +153,29 @@ Make sure the Android emulator or physical device is properly connected and reco
 ```bash
 adb devices
 ```
+### Configuration for Appium Inspector
+```
+Remote host: 127.0.0.1
+Remote port: 4723
+```
+
+### Configuration for Appium Inspector
+```json
+{
+  "platformName": "Android",
+  "appium:deviceName": "emulator-5555",
+  "appium:automationName": "UiAutomator2",
+  "appium:appPackage": "com.saucelabs.mydemoapp.android",
+  "appium:appActivity": "com.saucelabs.mydemoapp.android.view.activities.SplashActivity",
+  "appium:appWaitActivity": "com.saucelabs.mydemoapp.android.view.activities.MainActivity",
+  "appium:noReset": true,
+  "appium:fullReset": false,
+  "appium:newCommandTimeout": 120,
+  "appium:adbExecTimeout": 20000,
+  "appium:uiautomator2ServerInstallTimeout": 60000,
+  "appium:autoGrantPermissions": true
+}
+```
 
 ## License
 This project is licensed under the MIT License - see the LICENSE file for details.
