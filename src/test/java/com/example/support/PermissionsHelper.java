@@ -8,7 +8,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class PermissionsHelper {
     private static final String ALLOW_BUTTON_XPATH = "//android.widget.Button[@text='ALLOW' or @text='Allow']";
-    private static final String BIOMETRIC_OK_BUTTON_XPATH = "//android.widget.Button[@text='OK']";
+    private static final By BIOMETRIC_TITLE_ID = By.id("com.saucelabs.mydemoapp.android:id/alertTitle");
+    private static final By BIOMETRIC_OK_BUTTON_ID = By.id("android:id/button1");
 
     private final AndroidDriver<MobileElement> driver;
     private final WebDriverWait quickWait;
@@ -22,7 +23,7 @@ public class PermissionsHelper {
 
     public void grantPermission(String permission) {
         try {
-            MobileElement allowButton = waitForElementToBeClickable(ALLOW_BUTTON_XPATH, quickWait);
+            MobileElement allowButton = waitForElementToBeClickable(By.xpath(ALLOW_BUTTON_XPATH), quickWait);
             if (allowButton != null) {
                 allowButton.click();
                 System.out.println("Granted permission: " + permission);
@@ -44,21 +45,33 @@ public class PermissionsHelper {
 
     public void bypassBiometricAuthentication() {
         try {
-            MobileElement okButton = waitForElementToBeClickable(BIOMETRIC_OK_BUTTON_XPATH, lowWait);
-            if (okButton != null) {
-                okButton.click();
-                System.out.println("Biometric popup dismissed.");
+            boolean isBiometricTitleVisible = isElementPresent(BIOMETRIC_TITLE_ID, lowWait);
+            if (isBiometricTitleVisible) {
+                MobileElement okButton = waitForElementToBeClickable(BIOMETRIC_OK_BUTTON_ID, lowWait);
+                if (okButton != null) {
+                    okButton.click();
+                    System.out.println("Biometric popup dismissed.");
+                }
             }
         } catch (Exception e) {
             System.out.println("No biometric popup detected: " + e.getMessage());
         }
     }
 
-    private MobileElement waitForElementToBeClickable(String xpath, WebDriverWait wait) {
+    private MobileElement waitForElementToBeClickable(By locator, WebDriverWait wait) {
         try {
-            return (MobileElement) wait.until(ExpectedConditions.elementToBeClickable(By.xpath(xpath)));
+            return (MobileElement) wait.until(ExpectedConditions.elementToBeClickable(locator));
         } catch (Exception e) {
             return null;
+        }
+    }
+
+    private boolean isElementPresent(By locator, WebDriverWait wait) {
+        try {
+            wait.until(ExpectedConditions.presenceOfElementLocated(locator));
+            return true;
+        } catch (Exception e) {
+            return false;
         }
     }
 }
