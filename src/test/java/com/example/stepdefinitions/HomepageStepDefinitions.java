@@ -20,12 +20,33 @@ import java.util.stream.Collectors;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class HomepageStepDefinitions {
-    private AndroidDriver<MobileElement> driver;
-    private HelperCommons helperCommons;
+    // Element IDs
+    private static final String SORT_BUTTON_ID = "com.saucelabs.mydemoapp.android:id/sortIV";
+    private static final String SORT_TEXT_ID = "com.saucelabs.mydemoapp.android:id/sortTV";
+    private static final String NAME_ASC_ID = "com.saucelabs.mydemoapp.android:id/nameAscCL";
+    private static final String NAME_DESC_ID = "com.saucelabs.mydemoapp.android:id/nameDesCL";
+    private static final String PRICE_ASC_ID = "com.saucelabs.mydemoapp.android:id/priceAscCL";
+    private static final String PRICE_DESC_ID = "com.saucelabs.mydemoapp.android:id/priceDesCL";
+    private static final String MENU_BUTTON_ID = "com.saucelabs.mydemoapp.android:id/menuIV";
+    private static final String PRODUCT_ITEM_XPATH = "//android.view.ViewGroup[contains(@resource-id, 'productItem')]";
+    private static final String PRODUCT_NAME_RELATIVE_XPATH = ".//android.widget.TextView";
+
+    // Sort options
+    private static final String SORT_NAME_ASC = "Name - Ascending";
+    private static final String SORT_NAME_DESC = "Name - Descending";
+    private static final String SORT_PRICE_ASC = "Price - Ascending";
+    private static final String SORT_PRICE_DESC = "Price - Descending";
+    
+    private final AndroidDriver<MobileElement> driver;
+    private final HelperCommons helperCommons;
+    private final WebDriverWait mediumWait;
+    private final WebDriverWait quickWait;
 
     public HomepageStepDefinitions() {
         this.driver = DriverManager.getDriver();
         this.helperCommons = new HelperCommons(driver);
+        this.mediumWait = new WebDriverWait(driver, WaitTimes.MEDIUM_WAIT);
+        this.quickWait = new WebDriverWait(driver, WaitTimes.QUICK_WAIT);
     }
 
     @Before
@@ -35,77 +56,95 @@ public class HomepageStepDefinitions {
 
     @When("User tap on sorting button")
     public void userTapOnSortingButton() {
-        WebDriverWait wait = new WebDriverWait(driver, WaitTimes.MEDIUM_WAIT);
-        WebElement sortButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("com.saucelabs.mydemoapp.android:id/sortIV")));
-        sortButton.click();
+        clickElement(By.id(SORT_BUTTON_ID));
     }
 
     @Then("User able to see filter widget on homepage")
     public void userAbleToSeeFilterWidgetOnHomepage() {
-        WebDriverWait wait = new WebDriverWait(driver, WaitTimes.MEDIUM_WAIT);
-        WebElement sortByText = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("com.saucelabs.mydemoapp.android:id/sortTV")));
-        assertThat(sortByText.isDisplayed()).isTrue();
+        WebElement sortByText = waitForVisibility(By.id(SORT_TEXT_ID));
+        assertThat(sortByText.isDisplayed())
+            .withFailMessage("Filter widget is not displayed on homepage")
+            .isTrue();
     }
 
     @When("User tap on {string} option")
     public void userTapOnSortOption(String option) {
-        WebDriverWait wait = new WebDriverWait(driver, WaitTimes.QUICK_WAIT);
-        switch(option) {
-            case "Name - Ascending":
-                WebElement nameAscElement = wait.until(ExpectedConditions.elementToBeClickable(By.id("com.saucelabs.mydemoapp.android:id/nameAscCL")));
-                nameAscElement.click();
-                break;
-            case "Name - Descending":
-                WebElement nameDescElement = wait.until(ExpectedConditions.elementToBeClickable(By.id("com.saucelabs.mydemoapp.android:id/nameDesCL")));
-                nameDescElement.click();
-                break;
-            case "Price - Ascending":
-                WebElement priceAscElement = wait.until(ExpectedConditions.elementToBeClickable(By.id("com.saucelabs.mydemoapp.android:id/priceAscCL")));
-                priceAscElement.click();
-                break;
-            case "Price - Descending":
-                WebElement priceDescElement = wait.until(ExpectedConditions.elementToBeClickable(By.id("com.saucelabs.mydemoapp.android:id/priceDesCL")));
-                priceDescElement.click();
-                break;
-            default:
-                System.out.println("Unknown option: " + option);
-                break;
+        By locator = getSortOptionLocator(option);
+        if (locator != null) {
+            clickElement(locator);
+        } else {
+            throw new IllegalArgumentException("Unknown sort option: " + option);
         }
     }
 
     @Then("the products should be sorted with {string}")
     public void verifyProductsSorting(String sortOrder) {
-        WebDriverWait wait = new WebDriverWait(driver, WaitTimes.MEDIUM_WAIT);
-        List<MobileElement> products = driver.findElements(By.xpath("//android.view.ViewGroup[contains(@resource-id, 'productItem')]"));
-        List<String> productNames = products.stream()
-                .map(product -> product.findElement(By.xpath(".//android.widget.TextView")).getText())
-                .collect(Collectors.toList());
-
-        List<String> sortedNames = new ArrayList<>(productNames);
-        Collections.sort(sortedNames);
-        if (sortOrder.contains("Descending")) {
-            Collections.reverse(sortedNames);
-        }
-
-        assertThat(productNames).isEqualTo(sortedNames);
+        List<String> productNames = getProductNames();
+        List<String> expectedOrder = getSortedProductNames(productNames, sortOrder);
+        
+        assertThat(productNames)
+            .withFailMessage("Products are not correctly sorted by " + sortOrder)
+            .isEqualTo(expectedOrder);
     }
 
     @Then("the filter widget should be closed")
     public void verifyFilterWidgetClosed() {
-        WebDriverWait wait = new WebDriverWait(driver, WaitTimes.QUICK_WAIT);
-        boolean isFilterWidgetClosed = wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("com.saucelabs.mydemoapp.android:id/sortTV")));
-        assertThat(isFilterWidgetClosed).isTrue();
+        boolean isFilterWidgetClosed = quickWait.until(
+            ExpectedConditions.invisibilityOfElementLocated(By.id(SORT_TEXT_ID))
+        );
+        assertThat(isFilterWidgetClosed)
+            .withFailMessage("Filter widget is still visible")
+            .isTrue();
     }
 
     @When("User tap on menu button")
     public void userTapOnMenuButton() {
-        WebDriverWait wait = new WebDriverWait(driver, WaitTimes.QUICK_WAIT);
-        WebElement menuButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("com.saucelabs.mydemoapp.android:id/menuIV")));
-        menuButton.click();
+        clickElement(By.id(MENU_BUTTON_ID));
     }
 
     @After
     public void tearDown() {
         helperCommons.tearDown();
+    }
+
+    // Helper methods
+    private By getSortOptionLocator(String option) {
+        switch(option) {
+            case SORT_NAME_ASC:
+                return By.id(NAME_ASC_ID);
+            case SORT_NAME_DESC:
+                return By.id(NAME_DESC_ID);
+            case SORT_PRICE_ASC:
+                return By.id(PRICE_ASC_ID);
+            case SORT_PRICE_DESC:
+                return By.id(PRICE_DESC_ID);
+            default:
+                return null;
+        }
+    }
+
+    private List<String> getProductNames() {
+        List<MobileElement> products = driver.findElements(By.xpath(PRODUCT_ITEM_XPATH));
+        return products.stream()
+            .map(product -> product.findElement(By.xpath(PRODUCT_NAME_RELATIVE_XPATH)).getText())
+            .collect(Collectors.toList());
+    }
+
+    private List<String> getSortedProductNames(List<String> originalNames, String sortOrder) {
+        List<String> sortedNames = new ArrayList<>(originalNames);
+        Collections.sort(sortedNames);
+        if (sortOrder.contains("Descending")) {
+            Collections.reverse(sortedNames);
+        }
+        return sortedNames;
+    }
+
+    private WebElement waitForVisibility(By locator) {
+        return mediumWait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+    }
+
+    private void clickElement(By locator) {
+        WebElement element = quickWait.until(ExpectedConditions.elementToBeClickable(locator));
+        element.click();
     }
 }

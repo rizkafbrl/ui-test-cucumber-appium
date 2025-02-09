@@ -16,12 +16,29 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class LoginStepDefinitions {
-    private AndroidDriver<MobileElement> driver;
-    private HelperCommons helperCommons;
+    // Base package ID
+    private static final String BASE_PACKAGE = "com.saucelabs.mydemoapp.android";
+    
+    // Element IDs
+    private static final String USERNAME_FIELD_ID = BASE_PACKAGE + ":id/nameET";
+    private static final String PASSWORD_FIELD_ID = BASE_PACKAGE + ":id/passwordET";
+    private static final String LOGIN_BUTTON_ID = BASE_PACKAGE + ":id/loginBtn";
+    private static final String USERNAME_ERROR_ID = BASE_PACKAGE + ":id/nameErrorTV";
+    private static final String PASSWORD_ERROR_ID = BASE_PACKAGE + ":id/passwordErrorTV";
+    
+    // Test Data
+    private static final String VALID_USERNAME = "validUser";
+    private static final String VALID_PASSWORD = "validPass";
+    private static final String EMPTY_INPUT = "";
+    
+    private final AndroidDriver<MobileElement> driver;
+    private final HelperCommons helperCommons;
+    private final WebDriverWait wait;
 
     public LoginStepDefinitions() {
         this.driver = DriverManager.getDriver();
         this.helperCommons = new HelperCommons(driver);
+        this.wait = new WebDriverWait(driver, WaitTimes.QUICK_WAIT);
     }
 
     @Before
@@ -29,78 +46,90 @@ public class LoginStepDefinitions {
         helperCommons.setUp();
     }
 
-    private WebElement getUsernameField() {
-        WebDriverWait wait = new WebDriverWait(driver, WaitTimes.QUICK_WAIT);
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("com.saucelabs.mydemoapp.android:id/nameET")));
-    }
-
-    private WebElement getPasswordField() {
-        WebDriverWait wait = new WebDriverWait(driver, WaitTimes.QUICK_WAIT);
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("com.saucelabs.mydemoapp.android:id/passwordET")));
-    }
-
-    private void enterText(WebElement field, String text) {
-        field.clear();
-        field.sendKeys(text);
-    }
-
-    private void tapLoginButton() {
-        WebDriverWait wait = new WebDriverWait(driver, WaitTimes.QUICK_WAIT);
-        WebElement loginButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("com.saucelabs.mydemoapp.android:id/loginBtn")));
-        loginButton.click();
-    }
-
     @When("User enters a valid username and password")
     public void userEntersValidCredentials() {
-        enterText(getUsernameField(), "validUser");
-        enterText(getPasswordField(), "validPass");
+        enterCredentials(VALID_USERNAME, VALID_PASSWORD);
     }
 
     @When("User enters an empty username and a valid password")
     public void userEntersEmptyUsernameAndValidPassword() {
-        enterText(getUsernameField(), "");
-        enterText(getPasswordField(), "validPass");
+        enterCredentials(EMPTY_INPUT, VALID_PASSWORD);
     }
 
     @When("User enters a valid username and an empty password")
     public void userEntersValidUsernameAndEmptyPassword() {
-        enterText(getUsernameField(), "validUser");
-        enterText(getPasswordField(), "");
+        enterCredentials(VALID_USERNAME, EMPTY_INPUT);
     }
 
     @When("User enters empty username and password")
     public void userEntersEmptyUsernameAndPassword() {
-        enterText(getUsernameField(), "");
-        enterText(getPasswordField(), "");
+        enterCredentials(EMPTY_INPUT, EMPTY_INPUT);
     }
 
     @When("User taps the login button")
     public void userTapsLoginButton() {
-        tapLoginButton();
+        clickLoginButton();
     }
 
     @Then("User should see an error message under the username field")
     public void userShouldSeeErrorUnderUsernameField() {
-        WebDriverWait wait = new WebDriverWait(driver, WaitTimes.QUICK_WAIT);
-        WebElement usernameError = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("com.saucelabs.mydemoapp.android:id/nameErrorTV")));
-        assertThat(usernameError.isDisplayed()).isTrue();
+        verifyErrorMessage(USERNAME_ERROR_ID, "Username error message");
     }
 
     @Then("User should see an error message under the password field")
     public void userShouldSeeErrorUnderPasswordField() {
-        WebDriverWait wait = new WebDriverWait(driver, WaitTimes.QUICK_WAIT);
-        WebElement passwordError = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("com.saucelabs.mydemoapp.android:id/passwordErrorTV")));
-        assertThat(passwordError.isDisplayed()).isTrue();
+        verifyErrorMessage(PASSWORD_ERROR_ID, "Password error message");
     }
 
     @Then("User should see error messages under both username and password fields")
     public void userShouldSeeErrorsUnderBothFields() {
-        userShouldSeeErrorUnderUsernameField();
-        // userShouldSeeErrorUnderPasswordField();
+        verifyErrorMessage(USERNAME_ERROR_ID, "Username error message");
+        // verifyErrorMessage(PASSWORD_ERROR_ID, "Password error message");
     }
 
     @After
     public void tearDown() {
         helperCommons.tearDown();
+    }
+
+    // Helper methods
+    private void enterCredentials(String username, String password) {
+        enterText(getField(USERNAME_FIELD_ID), username);
+        enterText(getField(PASSWORD_FIELD_ID), password);
+    }
+
+    private WebElement getField(String fieldId) {
+        return waitForVisibility(By.id(fieldId));
+    }
+
+    private void enterText(WebElement field, String text) {
+        try {
+            field.clear();
+            field.sendKeys(text);
+        } catch (Exception e) {
+            throw new AssertionError(
+                String.format("Failed to enter text '%s' into field", text), e);
+        }
+    }
+
+    private void clickLoginButton() {
+        try {
+            WebElement loginButton = wait.until(
+                ExpectedConditions.elementToBeClickable(By.id(LOGIN_BUTTON_ID)));
+            loginButton.click();
+        } catch (Exception e) {
+            throw new AssertionError("Failed to click login button", e);
+        }
+    }
+
+    private WebElement waitForVisibility(By locator) {
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+    }
+
+    private void verifyErrorMessage(String errorFieldId, String errorContext) {
+        WebElement errorElement = waitForVisibility(By.id(errorFieldId));
+        assertThat(errorElement.isDisplayed())
+            .withFailMessage("%s is not displayed", errorContext)
+            .isTrue();
     }
 }

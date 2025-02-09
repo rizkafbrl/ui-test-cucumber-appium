@@ -12,7 +12,6 @@ public class ShoppingCartStepDefinitions {
     private static final String CART_LAYOUT_ID = "com.saucelabs.mydemoapp.android:id/cartRL";
     private static final String CART_INFO_ID = "com.saucelabs.mydemoapp.android:id/cartInfoLL";
     private static final String CART_COUNTER_ID = "com.saucelabs.mydemoapp.android:id/cartTV";
-    private static final String CART_ICON_ID = "com.saucelabs.mydemoapp.android:id/cartIV";
     private static final String SHOPPING_BUTTON_ID = "com.saucelabs.mydemoapp.android:id/shoppingBt";
     
     private final WebDriver driver;
