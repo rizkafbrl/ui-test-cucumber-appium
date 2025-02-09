@@ -14,8 +14,8 @@ Feature: Navigating through the homepage menu items
     Given User on homepage
     When User tap on menu button
     Then User able to see menu items
-    When User tap on "Webview" menu item
-    Then User should be redirected to "WebView" page
+    When User tap on "WebView" menu item
+    Then User should be redirected to "Webview" page
 
   @regression @positive @TC_HG_TAP_03
   Scenario: Open QR Code Scanner from homepage menu
