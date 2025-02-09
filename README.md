@@ -26,7 +26,7 @@ Before getting started, make sure you have the following installed on your syste
    appium --relaxed-security    
    ```
 
-4. Make sure your Android emulator or physical device is connected and running.
+4. Make sure your Android emulator or physical device is connected and running, for easy and smooth running please install the .apk into the emulator e.g emulator-5554 this happen since this code base not spawning the emulator so you need to manualy to prepare. 
 
 ## How to Run Tests
 
