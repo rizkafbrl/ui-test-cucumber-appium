@@ -70,7 +70,7 @@ Feature: Navigating through the homepage menu items
     Given User on homepage
     When User tap on menu button
     Then User able to see menu items
-    When User tap on "Virtual User" menu item
+    When User tap on "Virtual USB" menu item
     Then User should be redirected to "Virtual User" page
 
   @regression @positive @TC_HG_TAP_10
@@ -79,7 +79,7 @@ Feature: Navigating through the homepage menu items
     When User tap on menu button
     Then User able to see menu items
     When User tap on "Crash app (debug)" menu item
-    Then User should be redirected to "Crash app (debug)" page
+    Then User should be redirected to "Crashes" page
 
   @regression @positive @TC_HG_TAP_11
   Scenario: Open Log In from homepage menu
