@@ -66,12 +66,12 @@ Feature: Navigating through the homepage menu items
     Then User should be redirected to "FingerPrint" page
 
   @regression @positive @TC_HG_TAP_09
-  Scenario: Open Virtual User from homepage menu
+  Scenario: Open Virtual USB from homepage menu
     Given User on homepage
     When User tap on menu button
     Then User able to see menu items
     When User tap on "Virtual USB" menu item
-    Then User should be redirected to "Virtual User" page
+    Then User should be redirected to "Virtual USB" page
 
   @regression @positive @TC_HG_TAP_10
   Scenario: Open Crash app (debug) from homepage menu
