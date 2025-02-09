@@ -51,16 +51,24 @@ mvn test -Dcucumber.filter.tags="@yourScenarioTag"
 Replace @yourScenarioTag with the tag you want to target.
 
 # Clean the project
+```bash
 mvn clean
+```
 
 # Re-install all dependencies
+```bash
 mvn install
+```
 
 # Build the project
+```bash
 mvn package
+```
 
 # Run the tests and generate the report
+```bash
 mvn verify -Dcucumber.filter.tags="@TC_HG_SRT_01"
+```
 
 ## Cucumber Tags
 
