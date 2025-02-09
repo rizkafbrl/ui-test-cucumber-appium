@@ -2,7 +2,6 @@ package com.example.stepdefinitions;
 
 import io.cucumber.java.en.*;
 import org.openqa.selenium.*;
-
 import com.example.support.DriverManager;
 import com.example.support.WaitTimes;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -10,9 +9,14 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ShoppingCartStepDefinitions {
+    private static final String CART_LAYOUT_ID = "com.saucelabs.mydemoapp.android:id/cartRL";
+    private static final String CART_INFO_ID = "com.saucelabs.mydemoapp.android:id/cartInfoLL";
+    private static final String CART_COUNTER_ID = "com.saucelabs.mydemoapp.android:id/cartTV";
+    private static final String CART_ICON_ID = "com.saucelabs.mydemoapp.android:id/cartIV";
+    private static final String SHOPPING_BUTTON_ID = "com.saucelabs.mydemoapp.android:id/shoppingBt";
     
-    private WebDriver driver;
-    private WebDriverWait wait;
+    private final WebDriver driver;
+    private final WebDriverWait wait;
 
     public ShoppingCartStepDefinitions() {
         this.driver = DriverManager.getDriver();
@@ -21,74 +25,83 @@ public class ShoppingCartStepDefinitions {
 
     @When("User taps on the shopping cart icon")
     public void userTapsOnTheShoppingCartIcon() {
-        WebElement cartIcon = wait.until(ExpectedConditions.elementToBeClickable(By.id("com.saucelabs.mydemoapp.android:id/cartRL")));
+        WebElement cartIcon = wait.until(ExpectedConditions.elementToBeClickable(By.id(CART_LAYOUT_ID)));
         cartIcon.click();
     }
 
     @Then("User should be navigated to the shopping cart page")
     public void userShouldBeNavigatedToTheShoppingCartPage() {
-        WebElement cartPage = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("com.saucelabs.mydemoapp.android:id/cartInfoLL")));
-        assertThat(cartPage.isDisplayed()).isTrue();
+        WebElement cartPage = waitForElement(By.id(CART_INFO_ID));
+        assertThat(cartPage.isDisplayed())
+            .withFailMessage("Shopping cart page is not displayed")
+            .isTrue();
     }
 
     @When("User has no items in the cart")
     public void userHasNoItemsInTheCart() {
-        try {
-            WebElement cartInfo = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("com.saucelabs.mydemoapp.android:id/cartInfoLL")));
-            assertThat(cartInfo.isDisplayed()).isTrue();
-        } catch (TimeoutException e) {
-            throw new AssertionError("Shopping cart info element not found or not displayed.");
-        }
+        // Only verify that the cart counter shows no items
+        assertThat(getCartItemCount())
+            .withFailMessage("Cart should be empty but shows items")
+            .isZero();
     }
 
     @Then("User should see an empty shopping cart message")
     public void userShouldSeeAnEmptyShoppingCartMessage() {
-        try {
-            WebElement emptyCartMessage = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("com.saucelabs.mydemoapp.android:id/cartInfoLL")));
-            assertThat(emptyCartMessage.isDisplayed()).isTrue();
-        } catch (TimeoutException e) {
-            throw new AssertionError("Empty cart message not displayed.");
-        }
+        WebElement emptyCartMessage = waitForElement(By.id(CART_INFO_ID));
+        assertThat(emptyCartMessage.isDisplayed())
+            .withFailMessage("Empty cart message is not displayed")
+            .isTrue();
     }
 
     @Then("User should see the {string} button")
     public void userShouldSeeTheButton(String buttonText) {
-        WebElement goShoppingButton = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("com.saucelabs.mydemoapp.android:id/shoppingBt")));
-        assertThat(goShoppingButton.isDisplayed()).isTrue();
-        assertThat(goShoppingButton.getText()).isEqualTo(buttonText);
+        WebElement goShoppingButton = waitForElement(By.id(SHOPPING_BUTTON_ID));
+        assertThat(goShoppingButton.isDisplayed())
+            .withFailMessage("Shopping button is not displayed")
+            .isTrue();
+        assertThat(goShoppingButton.getText())
+            .withFailMessage("Shopping button text doesn't match expected: " + buttonText)
+            .isEqualTo(buttonText);
     }
 
     @Then("User should be able to tap the {string} button")
     public void userShouldBeAbleToTapTheButton(String buttonText) {
-        WebElement goShoppingButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("com.saucelabs.mydemoapp.android:id/shoppingBt")));
+        WebElement goShoppingButton = wait.until(ExpectedConditions.elementToBeClickable(By.id(SHOPPING_BUTTON_ID)));
         goShoppingButton.click();
     }
 
     @Then("The cart item counter should not be visible")
-public void theCartItemCounterShouldNotBeVisible() {
-    boolean isCounterVisible = isElementVisible(By.id("com.saucelabs.mydemoapp.android:id/cartIV"));
-
-    // Check if the cartTV shows any items
-    WebElement cartTV = driver.findElement(By.id("com.saucelabs.mydemoapp.android:id/cartTV"));
-    String cartText = cartTV.getText();
-
-    // If the cart is empty, the counter should not be visible
-    boolean isCartEmpty = cartText == null || cartText.trim().equals("0");
-
-    if (isCartEmpty) {
-        assertThat(isCounterVisible).isFalse();
-    } else {
-        // If there is an item, the counter should be visible
-        assertThat(isCounterVisible).isTrue();
+    public void theCartItemCounterShouldNotBeVisible() {
+        assertThat(hasCartCounterValue())
+            .withFailMessage("Cart counter should not show any value when cart is empty")
+            .isFalse();
     }
-}
 
-    private boolean isElementVisible(By locator) {
+    private WebElement waitForElement(By locator) {
         try {
-            WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
-            return element.isDisplayed();
-        } catch (NoSuchElementException | TimeoutException e) {
+            return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+        } catch (TimeoutException e) {
+            throw new AssertionError("Element not found or not visible: " + locator, e);
+        }
+    }
+
+    private boolean hasCartCounterValue() {
+        try {
+            WebElement cartCounter = driver.findElement(By.id(CART_COUNTER_ID));
+            String countText = cartCounter.getText();
+            return countText != null && !countText.trim().isEmpty();
+        } catch (NoSuchElementException e) {
             return false;
+        }
+    }
+
+    private int getCartItemCount() {
+        try {
+            WebElement cartCounter = driver.findElement(By.id(CART_COUNTER_ID));
+            String countText = cartCounter.getText().trim();
+            return countText.isEmpty() ? 0 : Integer.parseInt(countText);
+        } catch (NoSuchElementException | NumberFormatException e) {
+            return 0;
         }
     }
 }
