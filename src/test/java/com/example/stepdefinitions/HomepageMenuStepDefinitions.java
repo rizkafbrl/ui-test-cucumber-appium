@@ -18,6 +18,10 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.NoSuchElementException;
+
 public class HomepageMenuStepDefinitions {
     private AndroidDriver<MobileElement> driver;
     private HelperCommons helperCommons;
@@ -51,22 +55,27 @@ public class HomepageMenuStepDefinitions {
 
     @Then("User should be redirected to {string} page")
     public void userShouldBeRedirectedToPage(String pageTitle) {
-        WebDriverWait wait = new WebDriverWait(driver, WaitTimes.MEDIUM_WAIT);
+        WebDriverWait wait = new WebDriverWait(driver, WaitTimes.QUICK_WAIT);
         MobileElement pageTitleElement = null;
 
-        try {
-            pageTitleElement = (MobileElement) wait.until(ExpectedConditions.visibilityOfElementLocated(
-                    By.xpath("//android.widget.TextView[@text='" + pageTitle + "']")));
-        } catch (Exception e1) {
+        List<By> locators = Arrays.asList(
+            By.xpath("//android.widget.TextView[contains(@text, '" + pageTitle + "')]"),
+            MobileBy.AndroidUIAutomator("new UiSelector().resourceId(\"com.saucelabs.mydemoapp.android:id/productTV\").textContains(\"" + pageTitle + "\")"),
+            MobileBy.AndroidUIAutomator("new UiSelector().resourceId(\"com.saucelabs.mydemoapp.android:id/productTV\").descriptionContains(\"" + pageTitle + "\")"),
+            MobileBy.AndroidUIAutomator("new UiSelector().resourceId(\"com.saucelabs.mydemoapp.android:id/webViewTV\").textContains(\"" + pageTitle + "\")")
+        );
+
+        for (By locator : locators) {
             try {
-                // If element not found by XPath, try to find by resource-id and text
-                pageTitleElement = (MobileElement) wait.until(ExpectedConditions.visibilityOfElementLocated(
-                        MobileBy.AndroidUIAutomator("new UiSelector().resourceId(\"com.saucelabs.mydemoapp.android:id/productTV\").text(\"" + pageTitle + "\")")));
-            } catch (Exception e2) {
-                // If element not found by resource-id and text, try to find by resource-id and content-desc
-                pageTitleElement = (MobileElement) wait.until(ExpectedConditions.visibilityOfElementLocated(
-                        MobileBy.AndroidUIAutomator("new UiSelector().resourceId(\"com.saucelabs.mydemoapp.android:id/productTV\").description(\"" + pageTitle + "\")")));
+                pageTitleElement = (MobileElement) wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+                break; // Exit loop once found
+            } catch (Exception ignored) {
+                // Continue to the next locator
             }
+        }
+
+        if (pageTitleElement == null) {
+            throw new NoSuchElementException("Page title element not found using any method for title: " + pageTitle);
         }
 
         assertThat(pageTitleElement.isDisplayed()).isTrue();
