@@ -15,12 +15,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
 import static org.assertj.core.api.Assertions.assertThat;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 public class HomepageMenuStepDefinitions {
     private AndroidDriver<MobileElement> driver;
@@ -56,7 +52,9 @@ public class HomepageMenuStepDefinitions {
     @Then("User should be redirected to {string} page")
     public void userShouldBeRedirectedToPage(String pageTitle) {
         WebDriverWait wait = new WebDriverWait(driver, WaitTimes.QUICK_WAIT);
-        MobileElement pageTitleElement = null;
+
+        // **Grant necessary permissions before checking redirection**
+        grantNecessaryPermissions(pageTitle);
 
         List<By> locators = Arrays.asList(
             By.xpath("//android.widget.TextView[contains(@text, '" + pageTitle + "')]"),
@@ -65,32 +63,39 @@ public class HomepageMenuStepDefinitions {
             MobileBy.AndroidUIAutomator("new UiSelector().resourceId(\"com.saucelabs.mydemoapp.android:id/webViewTV\").textContains(\"" + pageTitle + "\")")
         );
 
-        for (By locator : locators) {
-            try {
-                pageTitleElement = (MobileElement) wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
-                break; // Exit loop once found
-            } catch (Exception ignored) {
-                // Continue to the next locator
-            }
-        }
-
-        if (pageTitleElement == null) {
-            throw new NoSuchElementException("Page title element not found using any method for title: " + pageTitle);
-        }
+        MobileElement pageTitleElement = locators.stream()
+            .map(locator -> {
+                try {
+                    return (MobileElement) wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+                } catch (Exception ignored) {
+                    return null;
+                }
+            })
+            .filter(Objects::nonNull)
+            .findFirst()
+            .orElseThrow(() -> new NoSuchElementException("Page title element not found for: " + pageTitle));
 
         assertThat(pageTitleElement.isDisplayed()).isTrue();
-
-        // Grant all permissions
-        permissionsHelper.grantAllPermissionsOnAndroid();
 
         // Verify that the drawer is closed
         try {
             boolean isMenuInvisible = wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("com.saucelabs.mydemoapp.android:id/menuRV")));
             assertThat(isMenuInvisible).isTrue();
         } catch (Exception e) {
-            // Log the exception and continue
             System.out.println("User not redirected. Menu drawer is still visible: " + e.getMessage());
         }
+    }
+
+    /**
+     * Grants necessary permissions based on the page title.
+     */
+    private void grantNecessaryPermissions(String pageTitle) {
+        Map<String, Runnable> permissionActions = Map.of(
+            "Geo Location Page", permissionsHelper::grantLocationPermission,
+            "Fingerprint Page", permissionsHelper::bypassBiometricAuthentication
+        );
+
+        permissionActions.getOrDefault(pageTitle, () -> {}).run();
     }
 
     @After
