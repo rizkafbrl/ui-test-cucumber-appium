@@ -36,6 +36,11 @@ To run all test scenarios and test cases, use the following command:
 ```bash
 mvn clean test
 ```
+Result via terminal:
+![Alt Text](https://raw.githubusercontent.com/rizkafbrl/ui-test-cucumber-appium/refs/heads/main/images/viaterminal.png)
+
+Result:
+![Alt Text](https://raw.githubusercontent.com/rizkafbrl/ui-test-cucumber-appium/refs/heads/main/images/viarunner.png)
 
 ### Running Tests with a Specific Scenario Tag
 To run tests with a specific scenario or tag, use the following command:
