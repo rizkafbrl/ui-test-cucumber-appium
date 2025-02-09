@@ -20,14 +20,16 @@ import java.util.stream.Collectors;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class HomepageStepDefinitions {
+    private static final String BASE_PACKAGE = "com.saucelabs.mydemoapp.android";
+
     // Element IDs
-    private static final String SORT_BUTTON_ID = "com.saucelabs.mydemoapp.android:id/sortIV";
-    private static final String SORT_TEXT_ID = "com.saucelabs.mydemoapp.android:id/sortTV";
-    private static final String NAME_ASC_ID = "com.saucelabs.mydemoapp.android:id/nameAscCL";
-    private static final String NAME_DESC_ID = "com.saucelabs.mydemoapp.android:id/nameDesCL";
-    private static final String PRICE_ASC_ID = "com.saucelabs.mydemoapp.android:id/priceAscCL";
-    private static final String PRICE_DESC_ID = "com.saucelabs.mydemoapp.android:id/priceDesCL";
-    private static final String MENU_BUTTON_ID = "com.saucelabs.mydemoapp.android:id/menuIV";
+    private static final String SORT_BUTTON_ID = BASE_PACKAGE + ":id/sortIV";
+    private static final String SORT_TEXT_ID = BASE_PACKAGE + ":id/sortTV";
+    private static final String NAME_ASC_ID = BASE_PACKAGE + ":id/nameAscCL";
+    private static final String NAME_DESC_ID = BASE_PACKAGE + ":id/nameDesCL";
+    private static final String PRICE_ASC_ID = BASE_PACKAGE + ":id/priceAscCL";
+    private static final String PRICE_DESC_ID = BASE_PACKAGE + ":id/priceDesCL";
+    private static final String MENU_BUTTON_ID = BASE_PACKAGE + ":id/menuIV";
     private static final String PRODUCT_ITEM_XPATH = "//android.view.ViewGroup[contains(@resource-id, 'productItem')]";
     private static final String PRODUCT_NAME_RELATIVE_XPATH = ".//android.widget.TextView";
 

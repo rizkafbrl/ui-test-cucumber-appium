@@ -9,10 +9,14 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ShoppingCartStepDefinitions {
-    private static final String CART_LAYOUT_ID = "com.saucelabs.mydemoapp.android:id/cartRL";
-    private static final String CART_INFO_ID = "com.saucelabs.mydemoapp.android:id/cartInfoLL";
-    private static final String CART_COUNTER_ID = "com.saucelabs.mydemoapp.android:id/cartTV";
-    private static final String SHOPPING_BUTTON_ID = "com.saucelabs.mydemoapp.android:id/shoppingBt";
+    // Base package ID
+    private static final String BASE_PACKAGE = "com.saucelabs.mydemoapp.android";
+
+    // Element IDs
+    private static final String CART_LAYOUT_ID = BASE_PACKAGE + ":id/cartRL";
+    private static final String CART_INFO_ID = BASE_PACKAGE + ":id/cartInfoLL";
+    private static final String CART_COUNTER_ID = BASE_PACKAGE + ":id/cartTV";
+    private static final String SHOPPING_BUTTON_ID = BASE_PACKAGE + ":id/shoppingBt";
     
     private final WebDriver driver;
     private final WebDriverWait wait;

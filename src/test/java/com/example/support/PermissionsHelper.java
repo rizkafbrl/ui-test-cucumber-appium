@@ -13,12 +13,10 @@ public class PermissionsHelper {
 
     private final AndroidDriver<MobileElement> driver;
     private final WebDriverWait quickWait;
-    private final WebDriverWait lowWait;
 
     public PermissionsHelper(AndroidDriver<MobileElement> driver) {
         this.driver = driver;
         this.quickWait = new WebDriverWait(driver, WaitTimes.QUICK_WAIT);
-        this.lowWait = new WebDriverWait(driver, WaitTimes.LOW_WAIT);
     }
 
     public void grantPermission(String permission) {
@@ -45,9 +43,9 @@ public class PermissionsHelper {
 
     public void bypassBiometricAuthentication() {
         try {
-            boolean isBiometricTitleVisible = isElementPresent(BIOMETRIC_TITLE_ID, lowWait);
+            boolean isBiometricTitleVisible = isElementPresent(BIOMETRIC_TITLE_ID, quickWait);
             if (isBiometricTitleVisible) {
-                MobileElement okButton = waitForElementToBeClickable(BIOMETRIC_OK_BUTTON_ID, lowWait);
+                MobileElement okButton = waitForElementToBeClickable(BIOMETRIC_OK_BUTTON_ID, quickWait);
                 if (okButton != null) {
                     okButton.click();
                     System.out.println("Biometric popup dismissed.");
