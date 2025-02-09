@@ -19,12 +19,16 @@ public class PermissionsHelper {
             MobileElement allowButton = (MobileElement) wait.until(
                 ExpectedConditions.elementToBeClickable(
                     By.xpath("//android.widget.Button[@text='ALLOW' or @text='Allow']")
-                    )
-                );
+                )
+            );
             allowButton.click();
         } catch (Exception e) {
             System.out.println("Permission " + permission + " not granted or requested: " + e.getMessage());
         }
+    }
+
+    public void grantLocationPermission() {
+        grantPermission("location");
     }
 
     public void grantAllPermissionsOnAndroid() {
@@ -33,7 +37,7 @@ public class PermissionsHelper {
         grantPermission("storage");
     }
 
-    public void bypassBiometricPopup() {
+    public void bypassBiometricAuthentication() {
         WebDriverWait wait = new WebDriverWait(driver, WaitTimes.LOW_WAIT);
         try {
             MobileElement okButton = (MobileElement) wait.until(
