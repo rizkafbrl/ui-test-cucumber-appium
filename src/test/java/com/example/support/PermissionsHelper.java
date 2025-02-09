@@ -7,23 +7,28 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class PermissionsHelper {
-    private AndroidDriver<MobileElement> driver;
+    private static final String ALLOW_BUTTON_XPATH = "//android.widget.Button[@text='ALLOW' or @text='Allow']";
+    private static final String BIOMETRIC_OK_BUTTON_XPATH = "//android.widget.Button[@text='OK']";
+
+    private final AndroidDriver<MobileElement> driver;
+    private final WebDriverWait quickWait;
+    private final WebDriverWait lowWait;
 
     public PermissionsHelper(AndroidDriver<MobileElement> driver) {
         this.driver = driver;
+        this.quickWait = new WebDriverWait(driver, WaitTimes.QUICK_WAIT);
+        this.lowWait = new WebDriverWait(driver, WaitTimes.LOW_WAIT);
     }
 
     public void grantPermission(String permission) {
-        WebDriverWait wait = new WebDriverWait(driver, WaitTimes.QUICK_WAIT);
         try {
-            MobileElement allowButton = (MobileElement) wait.until(
-                ExpectedConditions.elementToBeClickable(
-                    By.xpath("//android.widget.Button[@text='ALLOW' or @text='Allow']")
-                )
-            );
-            allowButton.click();
+            MobileElement allowButton = waitForElementToBeClickable(ALLOW_BUTTON_XPATH, quickWait);
+            if (allowButton != null) {
+                allowButton.click();
+                System.out.println("Granted permission: " + permission);
+            }
         } catch (Exception e) {
-            System.out.println("Permission " + permission + " not granted or requested: " + e.getMessage());
+            System.out.println("Permission not granted or not requested: " + permission + " - " + e.getMessage());
         }
     }
 
@@ -38,17 +43,22 @@ public class PermissionsHelper {
     }
 
     public void bypassBiometricAuthentication() {
-        WebDriverWait wait = new WebDriverWait(driver, WaitTimes.LOW_WAIT);
         try {
-            MobileElement okButton = (MobileElement) wait.until(
-                ExpectedConditions.elementToBeClickable(
-                    By.xpath("//android.widget.Button[@text='OK']")
-                )
-            );
-            okButton.click();
-            System.out.println("Biometric popup dismissed.");
+            MobileElement okButton = waitForElementToBeClickable(BIOMETRIC_OK_BUTTON_XPATH, lowWait);
+            if (okButton != null) {
+                okButton.click();
+                System.out.println("Biometric popup dismissed.");
+            }
         } catch (Exception e) {
             System.out.println("No biometric popup detected: " + e.getMessage());
+        }
+    }
+
+    private MobileElement waitForElementToBeClickable(String xpath, WebDriverWait wait) {
+        try {
+            return (MobileElement) wait.until(ExpectedConditions.elementToBeClickable(By.xpath(xpath)));
+        } catch (Exception e) {
+            return null;
         }
     }
 }
